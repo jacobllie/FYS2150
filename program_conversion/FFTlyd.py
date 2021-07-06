@@ -1,14 +1,13 @@
-from StykkevisFFT import stykkevisFFT
 import numpy as np
 from sound_aqcuisition import sound_data_aqcuisition
 import soundfile as sf
 import matplotlib.pyplot as plt
-#%matplotlib auto
+
 #Ta opp lyd-data for å finne egenfrekvensen til messingsstaven
 #Jacob Lie 22.4.21, basert på matlab kode fra Alex Read 1.3.18
 
-fmin = 500
-
+fmin = 500  #definerer en minimumsfrekvens for å fjerne støy
+fmax = 2000
 
 inputs = input("Har du en lydfil fra før? [Y/n] ")
 
@@ -18,17 +17,12 @@ if inputs == "Y" or inputs == "y":
     t = np.linspace(0,len(mydata)//samplerate,len(mydata))
 
 if inputs == "N" or inputs == "n":
-    #samplerate, duration = input("Skriv inn samplerate og duration på opptaket ")
     temp = input("Skriv inn samplerate og duration ").split()
     samplerate = int(temp[0])
     duration = int(temp[1])
-    mydata = sound_data_aqcuisition(duration, samplerate)
+    mydata = sound_data_aqcuisition(duration, samplerate)  #en funksjon som bruker pakken sounddevice til å gjøre lydopptak
 
 
-#duration = 5
-#samplerate = 96000
-#t = np.linspace(0, duration, samplerate*duration)
-#mydata = sound_data_aqcuisition(duration, samplerate)
 
 plt.subplot(121)
 plt.xlabel("Tid [s]")
@@ -37,14 +31,15 @@ plt.plot(t,mydata)
 
 
 n = len(mydata)
-Y = np.fft.fft(mydata)
-power = np.abs(Y[:len(Y)//2])**2
+Y = np.fft.fft(mydata)  #gjør fourier transformasjon
+power = np.real(Y[:len(Y)//2])#**2 #Henter ut de reelle verdiene 
 
-FFT_freq = samplerate//2*np.linspace(0,1,len(power))  #Deler på to pga. Nyquist
+FFT_freq = samplerate//2*np.linspace(0,1,len(power))  #Deler på to pga. Nyquistfrekvensen
 
 fmin_index = np.where(FFT_freq >= fmin)
-FFT_freq = FFT_freq[np.min(fmin_index):]
-power = power[np.min(fmin_index):]
+fmax_index = np.where(FFT_freq <= fmax)
+FFT_freq = FFT_freq[np.min(fmin_index):np.max(fmax_index)]
+power = power[np.min(fmin_index):np.max(fmax_index)]
 
 
 
