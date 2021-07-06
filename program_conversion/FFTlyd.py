@@ -25,6 +25,7 @@ if inputs == "N" or inputs == "n":
     samplerate = int(temp[0])
     duration = int(temp[1])
     mydata = sound_data_aqcuisition(duration, samplerate).transpose().reshape(-1)
+    print(mydata.shape)
     #mydata har shapen (1,n), for at fourier transformasjonen skal gå riktig for 
     #seg, er vi nødt til å først transponere den til (n,1), deretter reshape 
     #den slik at den får formen (n,)
@@ -40,9 +41,7 @@ plt.plot(t,mydata)
 Y = np.fft.fft(mydata)
 power = np.abs(Y[:len(Y)//2]) #ønsker bare de reelle verdiene, og vil ikke
 #inkludere speilingen, derfor har vi len(Y)//2
-
-Y = np.fft.fft(mydata)  #gjør fourier transformasjon
-power = np.real(Y[:len(Y)//2])#**2 #Henter ut de reelle verdiene 
+ 
 
 FFT_freq = samplerate//2*np.linspace(0,1,len(power))  #Deler på to pga. Nyquistfrekvensen
 
@@ -51,9 +50,6 @@ fmin_index = np.where(FFT_freq >= fmin)
 fmax_index = np.where(FFT_freq <= fmax)
 FFT_freq = FFT_freq[np.min(fmin_index):np.max(fmax_index)] #fjerner støy og justerer x-aksen
 
-fmin_index = np.where(FFT_freq >= fmin)
-fmax_index = np.where(FFT_freq <= fmax)
-FFT_freq = FFT_freq[np.min(fmin_index):np.max(fmax_index)]
 power = power[np.min(fmin_index):np.max(fmax_index)]
 
 
