@@ -1,6 +1,8 @@
 """
 Program for bruk i Tid og Frekvens og Masse og kraft. Bruker fotodiode og NI USB-6211
 Varighet på datainnsamling og frekvens osv må skrives inn manuelt nederst.
+
+Jacob Lie og Anders Bråte v2021.
 """
 import sys
 import nidaqmx
@@ -13,41 +15,41 @@ import pandas as pd
 
 
 
-def read_daq(sample_rate, duration,inputrange = 10 ):
+def read_daq(sample_rate, duration,inputrange = 10):
     """
-    Initiates a virtual voltage channel from the ai0 channel (input 15) from the nidaq
-    USB 6211. For a given duration, sample rate and input range (voltage range) the
-    voltage is read and returned as data.
+    Initierer en virtuell spennings kanal fram ai0, fra nidaq USB 6211. 
+    For en gitt opptakstid, sample rate og input range (spennings range), 
+    spenningen blir avlest og returnert som data
 
     args:
-        sample_rate(int): sample rate in hertz
-        duration (int): How long the data is read for in seconds
-        inputrange (int): The range of voltage that is read from the device
+        sample_rate(int): sample rate i hertz
+        duration (int): Hvor lang opptakstid i sekunder
+        inputrange (int): hvor stor range i spenning kan nidaq'en forvente.
     returns:
-        data (array): voltage values
-        t (array): numpy array of times
+        data (array): spenningsverdier
+        t (array): tidsarray
     """
+    #henter ut informasjon om hardware som trengs når man kjører nidaqmx API.
     system = nidaqmx.system.System.local()
     for device in system.devices:
         device = str(device)
         dev_index = device.find("=Dev")+1
-        #Assuming connected device is named "Devx" x = 1-9
+        #Anntar at device i system.devices er på formen "Device(name=Devx)" 
+        #hvor x er mellom 1 og 9.
         dev = device[dev_index:dev_index+4]
-        print(dev)
+
 
 
     samples_per_channel = int(sample_rate * duration)
-    threshold = 3.5
-    ts = 1/sample_rate
     with nidaqmx.Task() as task:
-        task.ai_channels.add_ai_voltage_chan("{}/ai0".format(dev),terminal_config 😕
-                                             TerminalConfiguration.RSE,\
+        task.ai_channels.add_ai_voltage_chan("{}/ai0".format(dev),\
+                                             terminal_config = TerminalConfiguration.RSE,\
                                              min_val = -inputrange,\
                                              max_val = inputrange)
         #Referenced Single Ended (RSE) Terminal Configuration Measures
         #the potential difference between the AI and the AI GND
 
-
+        print("Data acquisition started...")
         start = time.time()
         task.timing.cfg_samp_clk_timing(sample_rate, source = " "\
                                                 ,sample_mode = AcquisitionType.FINITE\
@@ -70,28 +72,38 @@ def rising_edge(data, time, edgeskip = False):
         periods (np array): the time betweet each pass
         mean_period (float): np.mean of periods
     """
-    threshold = 0.35 #voltage which when exceeded constitutes a reading
+    #Dersom spenningen som avleses er under 0.35 V så regnes det som en rising edge.
+    threshold = 3.5 
+    #finner indeksen til alle rising edge hendelser. 
     edge_index = np.argwhere((data[:-1] < threshold) & (data[1:] > threshold))
+    for index in edge_index:
+        print(data[index])
 
     try:
         edgeskip = sys.argv[1]
     except:
-        edgeskip = input('skriv inn 1 for Tid og Frekvens, og 0 for Masse og Kraft')
+        edgeskip = int(input('Skriv inn 1 dersom pendel passerer diode to ganger hver periode, og 0 dersom den passerer èn gang. '))
+        
 
     if edgeskip:
-        print('Tilpasset Masse og kraft')
+        print('Tilpasset to passeringer per periode.')
     else:
-        print('Tilpasset Tid og frekvens')
+        print('Tilpasset èn passering per periode.')
+    print("------------------------------")
     rising_edge_index = edge_index[::1+edgeskip]   #removing falling edge
-    period = np.zeros(len(rising_edge_index)-1)
+    try:
+        period = np.zeros(len(rising_edge_index)-1)
+    except:
+        print("Ingen fall i spenning ved pendel passering, er alt satt opp riktig?\n")
+        sys.exit(1)
     #there are only len(rising_edge_index) - 1 periods
 
     for i in range(len(rising_edge_index)-1):
         period[i] = t[rising_edge_index[i+1]] - t[rising_edge_index[i]]
 
     mean_period = np.mean(period)
-    std_mean = np.std(period)/np.sqrt(len(period))
-    return rising_edge_index, period, mean_period, std_mean
+    std_period = np.std(period)
+    return rising_edge_index, period, mean_period, std_period
 
 
 def plot_data(data, time, rising_edge_index, period):
@@ -101,27 +113,33 @@ def plot_data(data, time, rising_edge_index, period):
     plt.style.use("seaborn")
     plt.plot(time, data)
     plt.plot(time[rising_edge_index], data[rising_edge_index], 'o', label = "Period")
-    plt.xlabel('time [s]')
-    plt.ylabel('Voltage')
+    plt.xlabel('tid [s]')
+    plt.ylabel('Spenning')
     plt.legend()
     plt.show()
     plt.scatter(time[rising_edge_index[1:]], period, c = "g")
-    plt.xlabel('time [s]')
-    plt.ylabel('Period [s]')
-    plt.title('Period vs time')
+    plt.xlabel('tid [s]')
+    plt.ylabel('Periode [s]')
+    plt.title('Periode vs tid')
     plt.show()
 
-if _name_ == "_main_":
-    duration = 10
-    sample_rate = 25000
+if __name__ == "__main__":
+    duration = 3
+    sample_rate = 500
     samples_per_channel = int(sample_rate * duration)
     inputrange = 10
-
+    
     data, t = read_daq(sample_rate, duration, inputrange)
     df = pd.DataFrame(data)
     df.to_csv("pendel_data.csv")
     np.save("pendel_data.npy",data)
-
-    rising_edge_index, period, mean_period, std_mean = rising_edge(data, t)
-    print(period,mean_period,std_mean)
+    
+    rising_edge_index, period, mean_period, std_period = rising_edge(data, t)
+    print("Periodetider:",end=" ")
+    print(period)
+    print("Gjennomsnittlig Periode:",end=" ")
+    print(mean_period)
+    print("Standardavvik i periodetidene:",end=" ")
+    print(std_period)
     plot_data(data, t, rising_edge_index, period)
+     
