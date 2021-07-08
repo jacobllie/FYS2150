@@ -31,7 +31,7 @@ print(f'Relativt doppler shift fm/f = {fm_f}')
 t = np.arange(0,T,1/fs) #s
 n = len(t)
 
-#lager noen rando sinus signal med random støy
+#lager sinus signal med random støy
 omega_t = 2*np.pi *f*t
 y1 = np.sin(omega_t)
 y2 = Ar*np.sin(fm_f*omega_t) + As *np.random.randn(n)
@@ -51,9 +51,10 @@ FFT = np.fft.fft(y)
 freq = np.fft.fftfreq(len(FFT),1/fs)
 
 
-
+#Vi ønsker bare halve FFT arrayet, best forklart på denne måten:
 #It's inherent to FFT algorithm. The second half of FFT array is the conjugate of the first half, so don't contain any new information.
 #To visualize the spectrum, just use the first half. 
+#Eller sagt på en annen måte: den andre halvdelen er bare en speiling.
 plt.style.use("seaborn")
 plt.title("Fourier transform of signal")
 plt.plot(freq[:n//2],np.abs(FFT[:n//2]))
