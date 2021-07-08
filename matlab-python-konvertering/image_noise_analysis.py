@@ -12,7 +12,7 @@ def image_noise_analysis(filename):
     im1 = np.flip(im1, axis=2)
 
     print(im1)
-    #plot image
+    #plotter bildet
 
     Ny = im1.shape[0]
     Nx = im1.shape[1]
@@ -21,14 +21,14 @@ def image_noise_analysis(filename):
 
     fig, ax = plt.subplots()
     ax.imshow(im1)
-    #create rectangle patch
+    #lager et rektangulært fokuspunkt
     rect = mpl.patches.Rectangle((cc[0] - round(nx/2),cc[1] - round(ny/2)), nx,ny,
                                  linewidth=1, edgecolor='r', facecolor=None, fill = False)
     plt.plot(cc[0], cc[1], 'r+')
     ax.add_patch(rect)
     plt.show()
 
-    #extract green channel
+    #henter ut grønn channel verdier
     im2 = im1[:,:,2]
     print(np.shape(im1))
 
@@ -42,9 +42,9 @@ def image_noise_analysis(filename):
     ax2.imshow(im2)
     plt.show()
 
-    #neightbour difference
+    #forskjell i intensitet mellom naboer
     im3 = im2[:,1:-2] - im2[:,2:-1]
-    #variance
+    #varianse
     v = np.var(im3[:])
     fig3, ax3 = plt.subplots()
     ax3.imshow(im3)
@@ -54,5 +54,3 @@ def image_noise_analysis(filename):
 
 
 
-
-image_noise_analysis('geh.jpg')
