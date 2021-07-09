@@ -1,7 +1,8 @@
 import numpy as np
-from sound_aqcuisition import sound_data_aqcuisition
+from sound_acquisition import sound_data_acquisition
 import soundfile as sf
 import matplotlib.pyplot as plt
+from sound_acquisition_pyaudio import pyaudio_acquisition
 
 #Ta opp lyd-data for å finne egenfrekvensen til messingsstaven
 #Jacob Lie 22.4.21, basert på matlab kode fra Alex Read 1.3.18
@@ -24,11 +25,23 @@ if inputs == "N" or inputs == "n":
     temp = input("Skriv inn samplerate og duration ").split()
     samplerate = int(temp[0])
     duration = int(temp[1])
-    mydata = sound_data_aqcuisition(duration, samplerate).transpose().reshape(-1)
-    print(mydata.shape)
-    #mydata har shapen (1,n), for at fourier transformasjonen skal gå riktig for 
-    #seg, er vi nødt til å først transponere den til (n,1), deretter reshape 
-    #den slik at den får formen (n,)
+    
+    """For pyaudio unhash linjen under."""
+    #mydata = pyaudio_acquisition(duration, samplerate)
+    """For sounddevice unhash linjen under."""
+    #mydata = sound_data_acquisition(duration, samplerate).transpose().reshape(-1)
+    """
+    Dersom du bruker sounddevice så vil mydata har shapen (1,n),
+    for at fourier transformasjonen skal gå riktig for seg,
+    er vi nødt til å først transponere den til (n,1), deretter reshape 
+    den slik at den får formen (n,).
+    """
+
+try: 
+    print("{} antall samples er registrert." .format(len(mydata)))
+except:
+    print("\n Har du husket å unhashe mydata linjen?")
+    
  
 t = np.linspace(0,len(mydata)//samplerate,len(mydata))
 
