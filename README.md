@@ -39,7 +39,7 @@ conda install -c conda-forge nidaqmx-python
 `
 
 
-### **sound_aqcuisition.py**
+### **sound_acquisition_sounddevice.py**
 
 Dette programmet tar opp lyd fra en mikrofon, til dette trenger man pakkene [sounddevice](https://python-sounddevice.readthedocs.io/en/0.4.1/usage.html) og [soundfile](https://pypi.org/project/SoundFile/).
 Sounddevice beskrives best av en bruker på [reddit](https://www.reddit.com/r/Python/comments/3k11g5/whats_a_good_sound_recording_library/):
@@ -54,6 +54,15 @@ I et ipython vindu kan du skrive:
 `pip install sounddevice`
 
 `pip install soundfile`
+
+
+### **sound_acquisition_pyaudio.py**
+
+På lab datamaskinene har jeg fått en error: 
+
+**"PortAudioError: Error querying device -1"**
+
+
 
 ### **videoframes.py**
 
