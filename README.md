@@ -58,10 +58,16 @@ I et ipython vindu kan du skrive:
 
 ### **sound_acquisition_pyaudio.py**
 
-På lab datamaskinene har jeg fått en error: 
+På lab datamaskinene har jeg fått en error, ved bruk av **sounddevice**
 
 **"PortAudioError: Error querying device -1"**
 
+Denne får jeg ikke på min personlige datamaskin, og jeg må finne ut hva det kommer av. 
+Men som en **backup** bruker jeg pakken [Pyaudio](https://people.csail.mit.edu/hubert/pyaudio/docs/), for å ta opp lyd. 
+
+For å laste ned **Pyaudio** skriver du dette i et ipython vindu:
+
+`pip install PyAudio`
 
 
 ### **videoframes.py**
