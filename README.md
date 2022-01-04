@@ -85,8 +85,8 @@ Det gjør man igjen via pip:
 
 Ved flere anledninger ønsker vi å analysere plottene vi lager derfor er det ønskelig at plottene kommer opp som et pop up. Slik at vi f.eks. zoome inn og se på x og y verdier. For å få til det, må du:
 
-1. trykk på tools 
-2. preferences 
+1. Trykk på tools 
+2. Preferences 
 3. iPython console
-4. graphics
+4. Graphics
 5. Under Graphics backend endre fra Inline til Automatic
