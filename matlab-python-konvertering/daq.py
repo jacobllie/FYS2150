@@ -61,7 +61,7 @@ def read_daq(sample_rate, duration,inputrange = 10):
     return data, t
 
 
-def rising_edge(data, t, edgeskip = False):
+def rising_edge(data, t):
     """
     Undersøker datasett med spenningsverdier, og sjekker om de inneholder
     rising edge (a.k.a. hvor spenningen går til 0 når pendelen passerer fotodioden.)
@@ -77,23 +77,21 @@ def rising_edge(data, t, edgeskip = False):
     threshold = 3.5 
     #betingelse for at vi har en rising edge
     edge_index = np.argwhere((data[:-1] < threshold) & (data[1:] > threshold))
-    try:
-        edgeskip = sys.argv[1]
-    except:
-        edgeskip = int(input('Skriv inn 1 dersom pendel passerer diode to ganger hver periode, og 0 dersom den passerer èn gang. '))
+    
+    edgeskip = int(input('Skriv inn 1 dersom pendel passerer diode to ganger hver periode, og 0 dersom den passerer èn gang. '))
         
-    print(edgeskip)
     if edgeskip:
         print('Tilpasset to passeringer per periode.')
     else:
         print('Tilpasset èn passering per periode.')
     print("------------------------------")
     rising_edge_index = edge_index[::1+edgeskip]   #removing falling edge
-    try:
-        period = np.zeros(len(rising_edge_index)-1)
-    except:
+    if len(rising_edge_index) == 0:
         print("Ingen fall i spenning ved pendel passering, er alt satt opp riktig?\n")
         sys.exit(1)
+    else:
+        period = np.zeros(len(rising_edge_index)-1)
+   
     #there are only len(rising_edge_index) - 1 periods
 
     for i in range(len(rising_edge_index)-1):
@@ -109,14 +107,37 @@ def plot_data(data, time, rising_edge_index, period):
     plots data
     """
     plt.style.use("seaborn")
+    
+    """fig, ax= plt.subplots()
+    
+    ax.plot(time,data)
+    
+    ax.set_xlabel("tid [s]")
+    ax.set_ylabel("Spenning")
+    
+    ax2 = ax.twinx()
+    
+    ax2.plot(time[rising_edge_index], data[rising_edge_index], 'o', label = "Period")
+    #ax2.scatter(time[rising_edge_index[1:]], period, c = "g")
+    
+    ax2.set_ylabel("Periode [s]")
+    
+    plt.legend()
+    plt.show()"""
+    
+    
+   
+    plt.subplot(121)
+    
     plt.plot(time, data)
     plt.plot(time[rising_edge_index], data[rising_edge_index], 'o', label = "Period")
     plt.xlabel('tid [s]')
     plt.ylabel('Spenning')
     plt.legend()
-    plt.show()
+    #plt.show()
+    
+    plt.subplot(122)
     plt.scatter(time[rising_edge_index[1:]], period, c = "g")
     plt.xlabel('tid [s]')
     plt.ylabel('Periode [s]')
-    plt.title('Periode vs tid')
     plt.show()
