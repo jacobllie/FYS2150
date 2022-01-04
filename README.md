@@ -86,10 +86,7 @@ Det gjør man igjen via pip:
 Ved flere anledninger ønsker vi å analysere plottene vi lager derfor er det ønskelig at plottene kommer opp som et pop up. Slik at vi f.eks. zoome inn og se på x og y verdier. For å få til det, må du:
 
 1. trykk på tools 
-
-![tools]( "MarineGEO logo")
-
-3. preferences 
-4. iPython console
-5. graphics
-6. Under Graphics backend endre fra Inline til Automatic
+2. preferences 
+3. iPython console
+4. graphics
+5. Under Graphics backend endre fra Inline til Automatic
