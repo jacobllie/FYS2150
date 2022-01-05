@@ -22,7 +22,7 @@ fmax = 2000
 RR = input("Er dette første gang du kjører FFTlyd? [Y/n] ")
 
 if RR == "Y" or RR == "y":
-    if "RANGGYU.wav" not in os.listdir():
+    if "RANGGYU.wav" not in os.listdir(os.getcwd()):
         url = "https://github.com/jacobllie/RANGGYU/blob/main/RANGGYU.wav?raw=true"
         raw = requests.get(url).content
         
