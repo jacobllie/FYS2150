@@ -4,7 +4,8 @@ import wave
 import soundfile as sf
 import matplotlib.pyplot as plt
 from sound_acquisition_pyaudio import pyaudio_acquisition
-from sound_aqcuisition_sounddevice import sound_data_aqcuisition
+from RANGGYU_function import RANGGYU_function
+
 #Ta opp lyd-data for å finne egenfrekvensen til messingsstaven
 #Jacob Lie 22.4.21, basert på matlab kode fra Alex Read 1.3.18
 
@@ -16,46 +17,11 @@ fmax = 2e3
 fmin = 500  #definerer en minimumsfrekvens for å fjerne støy
 fmax = 2000
 
+
 RR = input("Er dette første gang du kjører FFTlyd? [Y/n] ")
 
 if RR == "Y" or RR == "y":
-    import requests
-    import wave 
-
-    url = "https://github.com/jacobllie/RANGGYU/blob/main/RANGGYU.wav?raw=true"
-    raw = requests.get(url).content
-    
-    with open('RANGGYU.wav', mode='bx') as f:
-        f.write(raw)
-    
-
-    # Set chunk size of 1024 samples per data frame
-    chunk = 1024  
-    
-    # Open the sound file 
-    wf = wave.open("RANGGYU.wav", 'rb')
-    
-    # Create an interface to PortAudio
-    p = pyaudio.PyAudio()
-    
-    # Open a .Stream object to write the WAV file to
-    # 'output = True' indicates that the sound will be played rather than recorded
-    stream = p.open(format = p.get_format_from_width(wf.getsampwidth()),
-                    channels = wf.getnchannels(),
-                    rate = wf.getframerate(),
-                    output = True)
-    
-    # Read data in chunks
-    data = wf.readframes(chunk)
-    
-    # Play the sound by writing the audio data to the stream
-    while data != '':
-        stream.write(data)
-        data = wf.readframes(chunk)
-
-    # Close and terminate the stream
-    stream.close()
-    p.terminate()
+    RANGGYU_function()
 
 inputs = input("Har du en lydfil fra før? [Y/n] ")
 
@@ -68,21 +34,13 @@ if inputs == "N" or inputs == "n":
     samplerate = int(temp[0])
     duration = int(temp[1])
     
-    """For pyaudio unhash linjen under."""
     mydata = pyaudio_acquisition(duration, samplerate)
-    """For sounddevice unhash linjen under."""
-    #mydata = sound_data_acquisition(duration, samplerate).transpose().reshape(-1)
-    """
-    Dersom du bruker sounddevice så vil mydata har shapen (1,n),
-    for at fourier transformasjonen skal gå riktig for seg,
-    er vi nødt til å først transponere den til (n,1), deretter reshape 
-    den slik at den får formen (n,).
-    """
+    
 
 try: 
     print("{} antall samples er registrert." .format(len(mydata)))
 except:
-    print("\n Har du husket å unhashe mydata linjen?")
+    print("\n Har du husket å unhashe mydata linjen i linje 36?")
     
  
 t = np.linspace(0,len(mydata)//samplerate,len(mydata))
