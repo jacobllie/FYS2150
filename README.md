@@ -76,6 +76,17 @@ Prøv å gjør dette i steden:
    Det kan gjøres i Spyder sitt iPython vindu: <br>
    `import sys` <br>
    `print(sys.version)`
+  Output:   
+  ![pyaudio_install](https://user-images.githubusercontent.com/72126694/148218621-df278c6d-33c5-4688-8f84-a83d5bead3c8.png)
+
+Her ser vi at vi har python 3.8 64 bit (AMD). 
+
+Gå deretter inn på [denne nettsiden](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio) for å finne den pyaudio som stemmer med din python versjon. 
+I vårt tilfelle ønsker vi **PyAudio‑0.2.11‑cp38‑cp38‑win_amd64.whl**.
+Etter du har lastet ned riktig fil. Gå til et iPython vindu. og skriv:
+
+![pyaudio_install2](https://user-images.githubusercontent.com/72126694/148220150-5c1fc690-0eba-460d-b299-46324539b5e2.png)
+
 
 ### **videoframes.py**
 
@@ -92,8 +103,16 @@ Det gjør man igjen via pip:
 
 Ved flere anledninger ønsker vi å analysere plottene vi lager derfor er det ønskelig at plottene kommer opp som et pop up. Slik at vi f.eks. zoome inn og se på x og y verdier. For å få til det, må du:
 
-1. Trykk på tools 
+1. Trykk på tools
+   
+![spyder_plot1](https://user-images.githubusercontent.com/72126694/148220286-0bfa5f29-1d98-4bb3-a760-d018c852e70c.png)
+
 2. Preferences 
-3. iPython console
-4. Graphics
-5. Under Graphics backend endre fra Inline til Automatic
+
+ ![sspyder_plot2](https://user-images.githubusercontent.com/72126694/148220610-087bcc96-63b2-4221-abd1-46727cc3e7b5.jpg)
+
+
+3. iPython console - Graphics - Graphics backend 
+   Endre fra Inline til Automatic
+![spyder_plot3](https://user-images.githubusercontent.com/72126694/148220953-dc50abfd-3596-4432-bdc7-0083c87e40ae.png)
+
