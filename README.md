@@ -65,10 +65,17 @@ På lab datamaskinene har jeg fått en error, ved bruk av **sounddevice**
 Denne får jeg ikke på min personlige datamaskin, og jeg må finne ut hva det kommer av. 
 Men som en **backup** bruker jeg pakken [Pyaudio](https://people.csail.mit.edu/hubert/pyaudio/docs/), for å ta opp lyd. 
 
-For å laste ned **Pyaudio** skriver du dette i et ipython vindu:
+For å laste ned **Pyaudio** skriver du dette i et ipython vindu i f.eks. Spyder:
 
 `pip install PyAudio`
 
+Dersom det ikke funker, kan det være at du den pyaudioen som pip prøver å laste ned ikke passer med din versjon av python. 
+Prøv å gjør dette i steden:
+
+1. Sjekk din versjon av python. 
+   Det kan gjøres i Spyder sitt iPython vindu: <br>
+   `import sys` <br>
+   `print(sys.version)`
 
 ### **videoframes.py**
 
