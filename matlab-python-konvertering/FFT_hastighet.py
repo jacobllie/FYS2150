@@ -1,26 +1,28 @@
-import sounddevice as sd
+#import sounddevice as sd
 import soundfile as sf
 import matplotlib.pyplot as plt
 import numpy as np
-from sound_acquisition import sound_data_acquisition
+#from sound_acquisition import sound_data_acquisition
 from sound_acquisition_pyaudio import pyaudio_acquisition
 from StykkevisFFT import stykkevisFFT
 
-samplerate = 96000  # Hertz
-duration = 5  # seconds
-fmin = 12300 #Hz
+
+
 
 
 inputs = input("Har du en lydfil fra før? [Y/n] ")
 
 if inputs == "Y" or inputs == "y":
     filename = input("Skriv inn filnavn på formen filnavn.wav ")
+    fmin = int(input("Hva er minimumsfrekvensen? "))
     mydata, samplerate = sf.read(filename)
+    duration = int(len(mydata)/samplerate)
 
 if inputs == "N" or inputs == "n":
-    temp = input("Skriv inn samplerate og duration ").split()
+    temp = input("Skriv inn samplerate [Hz] varighet [s] og fmin [Hz] ").split()
     samplerate = int(temp[0])
     duration = int(temp[1])
+    fmin = int(temp[2])
     
     """For pyaudio unhash linjen under."""
     mydata = pyaudio_acquisition(duration, samplerate)
@@ -44,7 +46,13 @@ except:
 tw, fw, n, FFT_freq, power = stykkevisFFT(t,samplerate,mydata,fmin)
 
 
+fmin_idx = np.argwhere(FFT_freq > fmin)
 
+power = power[:,np.min(fmin_idx):]
+FFT_freq = FFT_freq[np.min(fmin_idx):]
+
+print(power.shape)
+print(FFT_freq.shape)
 
 plt.style.use("seaborn")
 plt.subplot(1,3,1)

@@ -71,6 +71,15 @@ if inputs == "N" or inputs == "n":
     
     mydata = pyaudio_acquisition(duration, samplerate)
     
+    """For sounddevice unhash linjen under."""
+    #mydata = sound_data_acquisition(duration, samplerate).transpose().reshape(-1)
+    """
+    Dersom du bruker sounddevice så vil mydata har shapen (1,n),
+    for at fourier transformasjonen skal gå riktig for seg,
+    er vi nødt til å først transponere den til (n,1), deretter reshape 
+    den slik at den får formen (n,).
+    """
+    
 
 try: 
     print("{} antall samples er registrert." .format(len(mydata)))
