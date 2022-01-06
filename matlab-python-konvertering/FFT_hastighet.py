@@ -51,8 +51,7 @@ fmin_idx = np.argwhere(FFT_freq > fmin)
 power = power[:,np.min(fmin_idx):]
 FFT_freq = FFT_freq[np.min(fmin_idx):]
 
-print(power.shape)
-print(FFT_freq.shape)
+
 
 plt.style.use("seaborn")
 plt.subplot(1,3,1)
