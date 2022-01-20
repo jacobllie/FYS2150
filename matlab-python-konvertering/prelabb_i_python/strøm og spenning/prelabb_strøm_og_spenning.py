@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.io
 import matplotlib.pyplot as plt
+import pandas as pd
 
 """
 Fasit til siste oppgave i strøm og spenning prelabb.
@@ -38,12 +39,13 @@ def linear(slope,intercept,x):
     print("{:.4f} + {:.4f}x".format(intercept,slope))
     return intercept + slope*x
 
-mat = scipy.io.loadmat('RC_data.mat')
-vu_over_vi = np.array(mat["Vu_over_Vi"])
-frekvens = np.array(mat["frekvens"])
 
-vu_over_vi = np.log10(vu_over_vi[0,:])
-frekvens = np.log10(frekvens[0,:])
+mat = pd.read_csv('RC_data.csv')
+
+#print(mat[])
+
+vu_over_vi = np.log10(mat["Vu_over_Vi"])
+frekvens = np.log10(mat["frekvens"])
 
 """
 Etter å ha plottet dataene, vi har identifisert hvor plottet er lineært og kan
