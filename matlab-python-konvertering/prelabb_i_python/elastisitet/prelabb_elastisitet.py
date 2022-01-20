@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from prelabb_masse_og_kraft import regression, linear
+import soundfile as sf
+import os
 
 #spørsmål 4 og 5
 data = np.loadtxt("maalinger_h.dat")  #kg, mm
@@ -19,7 +21,7 @@ print("dA = {:.4e} m/kg".format(da/1000))
 #spørsmål 8
 #importerer soundfile for å lese av wav filer.
 #pip install soundfile
-import soundfile as sf
+
 
 f_hat = 1.107e3 #Hz
 filename = "messing_lyd.wav"
@@ -36,10 +38,16 @@ def sinus(f,t):
 
 sum_signal = mydata + sinus(f_hat,t)
 
-sf.write("svevninger.wav", sum_signal, samplerate)
+sf.write("sound.wav", sum_signal, samplerate)
 
 #importerer playsound for å spille av det summerte signalet.
 #pip install playsound
-from playsound import playsound
 
-playsound('svevninger.wav')
+"""
+Hvis lydfila har en path som er veldig lang, så får man en feilmelding.
+Lagre fila i desktop
+"""
+from playsound import playsound
+path = "C:\\Users\\jacob\\OneDrive\\Desktop"
+
+playsound(path + "\\svevninger.wav")
