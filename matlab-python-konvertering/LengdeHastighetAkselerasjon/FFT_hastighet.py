@@ -1,14 +1,8 @@
-#import sounddevice as sd
 import soundfile as sf
 import matplotlib.pyplot as plt
 import numpy as np
-#from sound_acquisition import sound_data_acquisition
 from sound_acquisition_pyaudio import pyaudio_acquisition
 from StykkevisFFT import stykkevisFFT
-
-
-
-
 
 inputs = input("Har du en lydfil fra før? [Y/n] ")
 
@@ -23,7 +17,7 @@ if inputs == "N" or inputs == "n":
     samplerate = int(temp[0])
     duration = int(temp[1])
     fmin = int(temp[2])
-    
+
     """For pyaudio unhash linjen under."""
     mydata = pyaudio_acquisition(duration, samplerate)
     """For sounddevice unhash linjen under."""
@@ -31,13 +25,13 @@ if inputs == "N" or inputs == "n":
     """
     Dersom du bruker sounddevice så vil mydata har shapen (1,n),
     for at fourier transformasjonen skal gå riktig for seg,
-    er vi nødt til å først transponere den til (n,1), deretter reshape 
+    er vi nødt til å først transponere den til (n,1), deretter reshape
     den slik at den får formen (n,).
     """
 
 t = np.linspace(0, duration, samplerate*duration)
 
-try: 
+try:
     print("{} antall samples er registrert." .format(len(mydata)))
 except:
     print("\n Har du husket å unhashe mydata linjen?")

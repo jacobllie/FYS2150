@@ -1,4 +1,3 @@
-import sounddevice as sd
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -8,10 +7,10 @@ def stykkevisFFT(t,fs,data,fmin):
     For enkelthetens skyld, fortsetter vi med det.
     Grunnen til at vi ofte bruker FFT_length//2 er fordi vi ønsker bare å plotte den reelle delen av signalet,
     og halvparten av arrayet som FFT returnerer er den komplekskonjugerte.
-        
-    Stykkevis FFT tar Fourier transformasjon på et tidsinterval. 
+
+    Stykkevis FFT tar Fourier transformasjon på et tidsinterval.
     Vi deler opp total duration inn i intervaller med lengde
-    (duration * samplingfreq)/2^x. x er et predefinert heltall.   
+    (duration * samplingfreq)/2^x. x er et predefinert heltall.
     Parameters
     ----------
     t :  Array
@@ -40,7 +39,7 @@ def stykkevisFFT(t,fs,data,fmin):
     FFT_length = 2**wp2
     #hvert tidsintervall vil få disse punktene å utføre FFT på.
     n = int(len(t)/FFT_length)
-    #gjør om t til lengde 2**wp2, dette vil gjøre at man mister et neglisjerbart 
+    #gjør om t til lengde 2**wp2, dette vil gjøre at man mister et neglisjerbart
     #antall datapunkter.
     t = t[:n*FFT_length].reshape(n,FFT_length)
     y = data[:n*FFT_length].reshape(n,FFT_length)
