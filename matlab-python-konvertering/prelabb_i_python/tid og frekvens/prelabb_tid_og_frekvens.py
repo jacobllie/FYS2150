@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.io
+import pandas as pd
 import random
 def mean(data):
     """
@@ -27,8 +27,9 @@ def mean_std(data):
 if __name__ == "__main__":
 
     #loader inn matlab dataframe
-    mat = scipy.io.loadmat('data1.mat')
-    data = np.array(mat["data1"])
+    mat = pd.read_csv('data1.csv')
+    print(mat)
+    data = mat["data1"]
 
     """
     Undersøker hvor mange datapunkter som ligger innenfor
