@@ -18,37 +18,44 @@ fmax = 2e3
 fmin = 500  #definerer en minimumsfrekvens for å fjerne støy
 fmax = 2000
 
+duration = 10 #default opptakstid
+samplerate = 15000 #default samplerate
 
+
+
+RR = "n"
+
+#Om du har kjørt dette programmet før, kommenter vekk linjen under.
 RR = input("Er dette første gang du kjører FFTlyd? [Y/n] ")
 
 if RR == "Y" or RR == "y":
     if "RANGGYU.wav" not in os.listdir(os.getcwd()):
         url = "https://github.com/jacobllie/RANGGYU/blob/main/RANGGYU.wav?raw=true"
         raw = requests.get(url).content
-        
+
         with open('RANGGYU.wav', mode='bx') as f:
             f.write(raw)
-    
+
 
     # Set chunk size of 1024 samples per data frame
-    chunk = 1024  
-    
-    # Open the sound file 
+    chunk = 1024
+
+    # Open the sound file
     wf = wave.open("RANGGYU.wav", 'rb')
-    
+
     # Create an interface to PortAudio
     p = pyaudio.PyAudio()
-    
+
     # Open a .Stream object to write the WAV file to
     # 'output = True' indicates that the sound will be played rather than recorded
     stream = p.open(format = p.get_format_from_width(wf.getsampwidth()),
                     channels = wf.getnchannels(),
                     rate = wf.getframerate(),
                     output = True)
-    
+
     # Read data in chunks
     data = wf.readframes(chunk)
-    
+
     # Play the sound by writing the audio data to the stream
     while data != '':
         stream.write(data)
@@ -65,28 +72,28 @@ if inputs == "Y" or inputs == "y":
     mydata, samplerate = sf.read(filename)
 
 if inputs == "N" or inputs == "n":
-    temp = input("Skriv inn samplerate og duration ").split()
-    samplerate = int(temp[0])
-    duration = int(temp[1])
-    
+    #temp = input("Skriv inn samplerate og duration ").split()
+    #samplerate = int(temp[0])
+    #duration = int(temp[1])
+
     mydata = pyaudio_acquisition(duration, samplerate)
-    
+
     """For sounddevice unhash linjen under."""
     #mydata = sound_data_acquisition(duration, samplerate).transpose().reshape(-1)
     """
     Dersom du bruker sounddevice så vil mydata har shapen (1,n),
     for at fourier transformasjonen skal gå riktig for seg,
-    er vi nødt til å først transponere den til (n,1), deretter reshape 
+    er vi nødt til å først transponere den til (n,1), deretter reshape
     den slik at den får formen (n,).
     """
-    
 
-try: 
+
+try:
     print("{} antall samples er registrert." .format(len(mydata)))
 except:
-    print("\n Har du husket å unhashe mydata linjen i linje 36?")
-    
- 
+    print("\n Har du husket å unhashe mydata linjen i linje 78?")
+
+
 t = np.linspace(0,len(mydata)//samplerate,len(mydata))
 
 plt.style.use("seaborn")
@@ -98,12 +105,12 @@ plt.plot(t,mydata)
 Y = np.fft.fft(mydata)
 power = np.abs(Y[:len(Y)//2]) #ønsker bare de reelle verdiene, og vil ikke
 #inkludere speilingen, derfor har vi len(Y)//2
- 
+
 
 FFT_freq = samplerate//2*np.linspace(0,1,len(power))  #Deler på to pga. Nyquistfrekvensen
 
 
-fmin_index = np.where(FFT_freq >= fmin)  
+fmin_index = np.where(FFT_freq >= fmin)
 fmax_index = np.where(FFT_freq <= fmax)
 FFT_freq = FFT_freq[np.min(fmin_index):np.max(fmax_index)] #fjerner støy og justerer x-aksen
 
